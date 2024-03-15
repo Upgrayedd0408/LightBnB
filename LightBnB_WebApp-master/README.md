@@ -6,7 +6,30 @@ With this app, you are able to add a new user, add a new listing of your own and
 
 ## Screenshots
 
-!["Screenshot of the addNewUser function"]()
+!["Screenshot of the addNewUser function"](https://github.com/Upgrayedd0408/LightBnB/blob/master/docs/new_user.png)
+!["Screenshot of the addNewProperty Function"](https://github.com/Upgrayedd0408/LightBnB/blob/master/docs/add_new_property.png)
+!["Screenshot of the search form"](https://github.com/Upgrayedd0408/LightBnB/blob/master/docs/search_properties.png)
+!["Screenshot of the page that shows your listings](https://github.com/Upgrayedd0408/LightBnB/blob/master/docs/my_listings.png)
+
+## Dependencies
+
+ - bcrypt
+ - cookie-session
+ - express-JS
+ - nodemon
+ - PostgreSQL
+
+## Getting Started
+
+Clone the repo to your local machine. git clone ...
+Open terminal and cd into the LightBnB_WebApp-master file.
+Run `npm install` to install the appropriate dependencies
+Start a new psql session
+Create a LightBnB database, [CREATE DATABASE lightbnb], and connect to it using \c lightbnb
+Run \i migrations/01_schema.sql to set up the tables.
+Run \i seeds/01_seeds.sql and \i seeds/02_seeds.sql to insert data into the tables.
+Run `npm run local` to start up the server.
+Open web browser and enter `localhost:3000` to run the app.
 
 ## Project Structure
 
