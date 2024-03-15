@@ -119,25 +119,86 @@ const getAllReservations = function (guest_id, limit = 10) {
  * @return {Promise<[{}]>}  A promise to the properties.
  */
 const getAllProperties = function (options, limit) {
-   return pool.query(`
-    SELECT *
-    FROM properties
-    LIMIT $1
-  `, [limit])
-  .then((result) => {
-    console.log(result.rows);
+  // 1
+  const queryParams = [];
+  // 2
+  let queryString = `
+  SELECT properties.*, avg(property_reviews.rating) as average_rating
+  FROM properties
+  JOIN property_reviews ON properties.id = property_id
+  `;
+
+  // 3
+  if (options.city) {
+    queryParams.push(`%${options.city}%`);
+    queryString += `WHERE LOWER(city) LIKE LOWER($${queryParams.length}) `; 
+  }
+
+  if (options.owner_id) {
+    queryParams.push(options.owner_id); // Directly push the owner_id without '%'
+    // Check if this is the first condition
+    if (queryParams.length === 1) { 
+        queryString += `AND owner_id = $${queryParams.length} `;
+    } else {
+        queryString += `WHERE owner_id = $${queryParams.length} `;
+    }
+  }
+
+  const minPrice = options.minimum_price_per_night * 100
+  const maxPrice = options.maximum_price_per_night * 100
+
+
+  if (minPrice && maxPrice) {
+      queryParams.push(minPrice);
+      queryParams.push(maxPrice);
+      // Add the appropriate SQL keyword based on whether it's the first condition
+      const conditionKeyword = queryParams.length >= 1 ? 'AND' : 'WHERE';
+      // Correct usage of `$${queryParams.length - 1}` for the first added parameter
+      // and `$${queryParams.length}` for the second.
+      queryString += `${conditionKeyword} cost_per_night BETWEEN $${queryParams.length-1} AND $${queryParams.length} `;
+  }
+
+
+
+  
+  // 4
+  queryString += `
+  GROUP BY properties.id
+  `;
+  
+  if (options.minimum_rating) {
+      queryParams.push(options.minimum_rating);
+      queryString += `HAVING avg(property_reviews.rating) >= $${queryParams.length} `;
+  }
+  
+  queryString += `
+  ORDER BY cost_per_night
+  LIMIT $${queryParams.length + 1};
+  `;
+  
+  // Finally, pushing the limit parameter after adjustments for HAVING
+  queryParams.push(limit);
+
+  // 5
+  console.log(queryString, queryParams);
+
+  // 6
+  return pool.query(queryString, queryParams)
+    .then((result) => {
+    console.log(result.rows, "query results")
     return result.rows;
-  })
-  .catch((err) => {
-    console.log(err.message);
-  });
+    })
+    .catch((err) =>  {
+      console.error('Query error', err.stack)
+    });
+};
 
 /*   const limitedProperties = {};
   for (let i = 1; i <= limit; i++) {
     limitedProperties[i] = properties[i];
   }
   return Promise.resolve(limitedProperties); */
-};
+
 
 /**
  * Add a property to the database
