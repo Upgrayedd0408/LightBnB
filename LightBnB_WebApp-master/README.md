@@ -1,5 +1,13 @@
 # LightBnB
 
+A simple multi-page AirBNB clone that uses server side Javascript to display information from queries to web pages via SQL queries.
+I used PostgreSQL to create the database, tables and entries then used SQL queries to return information to the user.
+With this app, you are able to add a new user, add a new listing of your own and search for various listings using different filtering methods.
+
+## Screenshots
+
+!["Screenshot of the addNewUser function"]()
+
 ## Project Structure
 
 ```
