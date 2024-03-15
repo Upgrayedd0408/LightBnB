@@ -80,10 +80,6 @@ const addUser = function (user) {
   .catch((err) => {
     console.log(err);
   });
-/*   const userId = Object.keys(users).length + 1;
-  user.id = userId;
-  users[userId] = user;
-  return Promise.resolve(user); */
 };
 
 /// Reservations
@@ -158,8 +154,6 @@ const getAllProperties = function (options, limit) {
       queryString += `${conditionKeyword} cost_per_night BETWEEN $${queryParams.length-1} AND $${queryParams.length} `;
   }
 
-
-
   
   // 4
   queryString += `
@@ -193,11 +187,6 @@ const getAllProperties = function (options, limit) {
     });
 };
 
-/*   const limitedProperties = {};
-  for (let i = 1; i <= limit; i++) {
-    limitedProperties[i] = properties[i];
-  }
-  return Promise.resolve(limitedProperties); */
 
 
 /**
@@ -217,13 +206,6 @@ const addProperty = function (property) {
   .catch((err) => {
     console.error(err.stack);
   })
-
-
-
-  /*   const propertyId = Object.keys(properties).length + 1;
-  property.id = propertyId;
-  properties[propertyId] = property;
-  return Promise.resolve(property); */
 };
 
 module.exports = {
